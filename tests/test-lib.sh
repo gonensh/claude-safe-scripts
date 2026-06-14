@@ -65,8 +65,16 @@ assert_eq "$NO_MATCH" "" "find_matching_script: no match returns empty"
 # --- find_heredoc_candidates ---
 HDMANIFEST='{"version":1,"scripts":[{"name":"analyze-csv","heredoc":true,"description":"Analyze a CSV"},{"name":"git-log","description":"Git log"}]}'
 CANDIDATES=$(find_heredoc_candidates "$HDMANIFEST")
-assert_true echo "$CANDIDATES" | grep -q "analyze-csv"
-assert_false echo "$CANDIDATES" | grep -q "git-log"
+if echo "$CANDIDATES" | grep -q "analyze-csv"; then
+    PASS=$((PASS+1)); echo "PASS: find_heredoc_candidates: includes heredoc entry"
+else
+    FAIL=$((FAIL+1)); echo "FAIL: find_heredoc_candidates: missing analyze-csv"
+fi
+if ! echo "$CANDIDATES" | grep -q "git-log"; then
+    PASS=$((PASS+1)); echo "PASS: find_heredoc_candidates: excludes non-heredoc entry"
+else
+    FAIL=$((FAIL+1)); echo "FAIL: find_heredoc_candidates: should not include git-log"
+fi
 
 echo ""
 echo "Results: ${PASS} passed, ${FAIL} failed"

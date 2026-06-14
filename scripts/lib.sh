@@ -58,13 +58,11 @@ find_matching_script() {
     ' 2>/dev/null
 }
 
-# Return names+descriptions of all scripts in the manifest.
-# When a heredoc is detected, all scripts are presented as candidates
-# since any script could match the inline command.
+# Return names+descriptions of scripts flagged heredoc:true.
 find_heredoc_candidates() {
     local manifest="$1"
     echo "$manifest" | jq -r \
-        '.scripts[] | "- " + .name + ": " + .description' \
+        '.scripts[] | select(.heredoc == true) | "- " + .name + ": " + .description' \
         2>/dev/null
 }
 
