@@ -1,3 +1,20 @@
 #!/usr/bin/env bash
-# Stub — implemented in Task 5
-exit 0
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "${SCRIPT_DIR}/../scripts/lib.sh"
+
+INPUT=$(cat)
+COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
+
+# Truncate long commands for readability
+DISPLAY_CMD="${COMMAND:0:200}"
+[ "${#COMMAND}" -gt 200 ] && DISPLAY_CMD="${DISPLAY_CMD}..."
+
+CONTEXT="[OFFER_SAFE_SCRIPT] A Bash command needs your approval: ${DISPLAY_CMD}
+
+Invoke the safe-scripts:safe-scripts skill. In your next reply, offer the user:
+(a) Save a generalized safe script — permanent auto-approval for this and similar commands
+(b) Approve once — run as-is this time only"
+
+emit_context "$CONTEXT" "PermissionRequest"
