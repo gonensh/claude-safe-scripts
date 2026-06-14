@@ -30,16 +30,23 @@ load_manifest() {
     local dir="$1"
     local manifest="${dir}/manifest.json"
     if [ -f "$manifest" ]; then
-        cat "$manifest"
+        if ! jq . "$manifest" >/dev/null 2>&1; then
+            printf 'safe-scripts: warning: malformed manifest at %s, using empty\n' "$manifest" >&2
+            printf '{"version":1,"scripts":[]}'
+        else
+            cat "$manifest"
+        fi
     else
         printf '{"version":1,"scripts":[]}'
     fi
 }
 
-# Return true if the command is a heredoc inline script.
+# Return true if the command contains a heredoc redirection operator (<<).
+# Requires << to be preceded by whitespace or appear at start, to avoid
+# false-positives from quoted strings like grep "<<EOF" file.txt.
 is_heredoc() {
     local command="$1"
-    echo "$command" | grep -qE '<<\s*'"'"'?[A-Z_a-z]+'
+    printf '%s\n' "$command" | grep -qE '(^|\s)<<\s*'"'"'?[A-Z_a-z]+'
 }
 
 # Find the first manifest entry whose patterns match the command.
@@ -67,6 +74,8 @@ find_heredoc_candidates() {
 }
 
 # Emit platform-aware additionalContext JSON.
+# Platform detection order: Cursor (CURSOR_PLUGIN_ROOT) → Claude Code
+# (CLAUDE_PLUGIN_ROOT set, COPILOT_CLI unset) → generic SDK / Copilot CLI.
 # Usage: emit_context <context_string> <event_name>
 emit_context() {
     local context="$1"
