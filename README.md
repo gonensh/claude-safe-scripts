@@ -6,6 +6,17 @@ A Claude Code plugin that builds a personal library of pre-approved safe scripts
 
 When Claude runs a Bash command that needs approval, the plugin intercepts and offers to save a generalized, parameterized version as a "safe script." Once saved, that script is permanently pre-approved — no more dialogs for that class of command.
 
+## Usage
+
+Once installed, the plugin works automatically. Here's the typical flow:
+
+1. Claude considers running a command like `git log --oneline -10 -- src/App.tsx`
+2. The plugin checks your saved scripts — if a match exists, Claude uses it directly (no dialog)
+3. If no match, Claude asks: *"I can save this as a safe script `git-file-log` so future runs are auto-approved. Save it, or run once?"*
+4. If you choose to save, Claude shows you the generalized script for confirmation, then saves it and runs it — no dialog, now or in future sessions
+
+Saved scripts live in `~/.claude/safe-scripts/` and are automatically added to Claude's allow-list.
+
 ## Requirements
 
 - Claude Code with plugin support

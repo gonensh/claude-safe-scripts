@@ -9,6 +9,12 @@ run_suite() {
     local name="$1"
     local file="$2"
     echo "=== $name ==="
+    if [ ! -f "$file" ]; then
+        echo "MISSING: $file" >&2
+        TOTAL_FAIL=$((TOTAL_FAIL+1))
+        echo ""
+        return
+    fi
     if bash "$file"; then
         TOTAL_PASS=$((TOTAL_PASS+1))
     else
