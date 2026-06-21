@@ -1,6 +1,6 @@
 # safe-scripts
 
-A Claude Code plugin that builds a personal library of pre-approved safe scripts to eliminate repetitive permission dialogs.
+A Claude Code plugin that turns one-off Bash commands into reusable, parameterized scripts that preserve their original intent — then pre-approves them so equivalent commands never trigger a permission dialog again.
 
 ## How it works
 

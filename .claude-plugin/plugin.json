@@ -1,9 +1,9 @@
 {
   "name": "safe-scripts",
-  "description": "Build a library of pre-approved safe scripts to eliminate repetitive permission dialogs",
+  "description": "Turns one-off Bash commands into reusable, parameterized scripts that preserve their original intent, then pre-approves them — so equivalent commands never trigger a permission dialog again. Supports bash, Python, Node, Perl, Go, and heredoc scripts.",
   "version": "1.0.0",
   "author": {
-    "name": "Your Name"
+    "name": "Gonen Shoham"
   },
   "license": "MIT",
   "keywords": ["permissions", "safety", "scripts", "automation", "bash"]
